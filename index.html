@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" id="htmlRoot">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Subnetting-Lernrechner_TEST</title>
+<title id="pageTitle">Subnetting-Lernrechner</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:#1f2937;font:16px Arial,sans-serif}
 main{max-width:1100px;margin:30px auto;padding:0 18px 50px}h1{margin-bottom:6px}
@@ -20,91 +20,230 @@ button{padding:12px 20px;border:0;border-radius:9px;background:#2563eb;color:whi
 .binary{overflow-x:auto}.row{display:flex;align-items:center;margin:10px 0;min-width:850px}.lbl{width:150px;font-weight:bold}.bits{display:flex;gap:6px;align-items:center}.oct{display:flex;gap:2px}.bit{width:22px;height:29px;display:flex;align-items:center;justify-content:center;border-radius:3px;font:bold 14px monospace;background:#e5e7eb}.nbit{background:#dbeafe;color:#1d4ed8}.hbit{background:#fce7f3;color:#be185d}.dot{font-weight:bold}
 pre{background:#111827;color:white;padding:16px;border-radius:8px;overflow:auto}table{width:100%;border-collapse:collapse}th,td{border:1px solid #d1d5db;padding:10px;text-align:center}th{background:#e5e7eb}.nr{background:#eff6ff}.fr,.lr{background:#ecfdf5}.br{background:#fef2f2}
 details{margin-top:12px;background:#fafafa;border:1px solid #ddd;padding:10px;border-radius:8px}summary{font-weight:bold;cursor:pointer}
+.langbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px}
+.langbtn{padding:7px 16px;border:2px solid #2563eb;background:white;color:#2563eb;border-radius:8px;cursor:pointer;font-weight:bold;font-size:14px}
+.langbtn.active{background:#2563eb;color:white}
 @media(max-width:700px){.grid,.results{grid-template-columns:1fr}h1{font-size:27px}}
 </style>
 </head>
 <body><main>
-<h1>Subnetting-Lernrechner</h1>
-<p class="sub">IPv4-Adresse und CIDR eingeben – Berechnung und Lern-Erklärung Schritt für Schritt.</p>
 
-<section class="card"><h2>Eingabe</h2>
-<div class="grid">
-<div><label>IP-Adresse</label><input id="ip" value="192.168.0.10"></div>
-<div><label>CIDR / Präfix</label><input id="cidr" type="number" min="0" max="32" value="21"></div>
-<button onclick="calc()">Berechnen</button>
+<div class="langbar">
+<button class="langbtn" id="btn-de" onclick="setLang('de')">DE</button>
+<button class="langbtn" id="btn-en" onclick="setLang('en')">EN</button>
 </div>
-<div class="sub" style="margin:10px 0 0">Beispiel: <b>192.168.0.10 / 21</b></div>
+
+<h1 data-i18n="h1"></h1>
+<p class="sub" data-i18n="subtitle"></p>
+
+<section class="card"><h2 data-i18n="inputHeader"></h2>
+<div class="grid">
+<div><label for="ip" data-i18n="ipLabel"></label><input id="ip" value="192.168.0.10"></div>
+<div><label for="cidr" data-i18n="cidrLabel"></label><input id="cidr" type="number" min="0" max="32" value="21"></div>
+<button onclick="calc()" data-i18n="calcBtn"></button>
+</div>
+<div class="sub" style="margin:10px 0 0"><span data-i18n="example"></span> <b>192.168.0.10 / 21</b></div>
 <div id="err" class="err"></div></section>
 
 <div id="out" class="hidden">
-<section class="card"><h2>Ergebnis</h2><div class="results">
-<div class="box green" onclick="help('network')"><small>Netzadresse</small><b id="network"></b></div>
-<div class="box" onclick="help('mask')"><small>Subnetzmaske</small><b id="mask"></b></div>
-<div class="box" onclick="help('broadcast')"><small>Broadcast-Adresse</small><b id="broadcast"></b></div>
-<div class="box" onclick="help('first')"><small>Erste verfügbare Adresse</small><b id="first"></b></div>
-<div class="box" onclick="help('last')"><small>Letzte verfügbare Adresse</small><b id="last"></b></div>
-<div class="box green" onclick="help('hosts')"><small>Mögliche Hosts</small><b id="hosts"></b></div>
-</div><div id="help" class="help"><b>Tipp:</b> Klicke auf ein Ergebnis für eine kurze Erklärung.</div></section>
+<section class="card"><h2 data-i18n="resultHeader"></h2><div class="results">
+<div class="box green" onclick="help('network')"><small data-i18n="lbl_network"></small><b id="network"></b></div>
+<div class="box" onclick="help('mask')"><small data-i18n="lbl_mask"></small><b id="mask"></b></div>
+<div class="box" onclick="help('broadcast')"><small data-i18n="lbl_broadcast"></small><b id="broadcast"></b></div>
+<div class="box" onclick="help('first')"><small data-i18n="lbl_first"></small><b id="first"></b></div>
+<div class="box" onclick="help('last')"><small data-i18n="lbl_last"></small><b id="last"></b></div>
+<div class="box green" onclick="help('hosts')"><small data-i18n="lbl_hosts"></small><b id="hosts"></b></div>
+</div><div id="help" class="help"></div></section>
 
-<section class="card"><h2>Netzanteil & Host-Anteil</h2>
+<section class="card"><h2 data-i18n="nethostHeader"></h2>
 <div class="results">
-<div class="box"><small>Bits gesamt</small><b>32</b></div>
-<div class="box"><small>Bits Netzanteil</small><b id="nb"></b></div>
-<div class="box"><small>Bits Hostanteil</small><b id="hb"></b></div>
-<div class="box"><small>Adressen insgesamt</small><b id="total"></b></div>
+<div class="box"><small data-i18n="lbl_totalbits"></small><b>32</b></div>
+<div class="box"><small data-i18n="lbl_netbits"></small><b id="nb"></b></div>
+<div class="box"><small data-i18n="lbl_hostbits"></small><b id="hb"></b></div>
+<div class="box"><small data-i18n="lbl_totaladdr"></small><b id="total"></b></div>
 </div><div class="bar"><div id="netbar" class="net"></div><div id="hostbar" class="host"></div></div></section>
 
-<section class="card"><h2>Binärdarstellung</h2><div class="binary">
-<div class="row"><div class="lbl">IP-Adresse:</div><div id="bip"></div></div>
-<div class="row"><div class="lbl">Subnetzmaske:</div><div id="bmask"></div></div>
-<div class="row"><div class="lbl">Netzadresse:</div><div id="bnet"></div></div>
-<div class="row"><div class="lbl">Broadcast:</div><div id="bbroad"></div></div></div>
-<details><summary>Wie lese ich das?</summary><p><b>Blau</b> = Netzanteil. <b>Rosa</b> = Host-Anteil. Bei /21 sind 21 Bits Netz und 11 Bits Host.</p></details></section>
+<section class="card"><h2 data-i18n="binaryHeader"></h2><div class="binary">
+<div class="row"><div class="lbl" data-i18n="lbl_biprow"></div><div id="bip"></div></div>
+<div class="row"><div class="lbl" data-i18n="lbl_bmaskrow"></div><div id="bmask"></div></div>
+<div class="row"><div class="lbl" data-i18n="lbl_bnetrow"></div><div id="bnet"></div></div>
+<div class="row"><div class="lbl" data-i18n="lbl_bbroadrow"></div><div id="bbroad"></div></div></div>
+<details><summary data-i18n="binaryDetailsSummary"></summary><p id="binaryDetailsText"></p></details></section>
 
-<section class="card learn"><h2>📘 Lernmodus</h2><div id="steps"></div></section>
+<section class="card learn"><h2 data-i18n="learnHeader"></h2><div id="steps"></div></section>
 
-<section class="card"><h2>Adressbereich</h2><table><thead><tr><th>Typ</th><th>Adresse</th><th>Bedeutung</th></tr></thead><tbody>
-<tr class="nr"><td>Netzadresse</td><td id="tn"></td><td>Identifiziert das Netzwerk</td></tr>
-<tr class="fr"><td>Erste verfügbare Adresse</td><td id="tf"></td><td>Erster möglicher Host</td></tr>
-<tr class="lr"><td>Letzte verfügbare Adresse</td><td id="tl"></td><td>Letzter möglicher Host</td></tr>
-<tr class="br"><td>Broadcast-Adresse</td><td id="tb"></td><td>Alle Hosts im Netzwerk</td></tr>
+<section class="card"><h2 data-i18n="rangeHeader"></h2><table><thead><tr><th data-i18n="th_type"></th><th data-i18n="th_addr"></th><th data-i18n="th_meaning"></th></tr></thead><tbody>
+<tr class="nr"><td data-i18n="lbl_network"></td><td id="tn"></td><td data-i18n="row_network_meaning"></td></tr>
+<tr class="fr"><td data-i18n="lbl_first"></td><td id="tf"></td><td data-i18n="row_first_meaning"></td></tr>
+<tr class="lr"><td data-i18n="lbl_last"></td><td id="tl"></td><td data-i18n="row_last_meaning"></td></tr>
+<tr class="br"><td data-i18n="lbl_broadcast"></td><td id="tb"></td><td data-i18n="row_broadcast_meaning"></td></tr>
 </tbody></table></section>
 
-<section class="card"><h2>🧮 Rechenweg kompakt</h2><pre id="formula"></pre></section>
+<section class="card"><h2 data-i18n="formulaHeader"></h2><pre id="formula"></pre></section>
 </div>
 </main>
 
 <script>
 const $=id=>document.getElementById(id);
+
+const I18N = {
+ de:{
+  h1:"Subnetting-Lernrechner",
+  subtitle:"IPv4-Adresse und CIDR eingeben – Berechnung und Lern-Erklärung Schritt für Schritt.",
+  inputHeader:"Eingabe", ipLabel:"IP-Adresse", cidrLabel:"CIDR / Präfix", calcBtn:"Berechnen", example:"Beispiel:",
+  resultHeader:"Ergebnis",
+  lbl_network:"Netzadresse", lbl_mask:"Subnetzmaske", lbl_broadcast:"Broadcast-Adresse",
+  lbl_first:"Erste verfügbare Adresse", lbl_last:"Letzte verfügbare Adresse", lbl_hosts:"Mögliche Hosts",
+  helpDefault:"<b>Tipp:</b> Klicke auf ein Ergebnis für eine kurze Erklärung.",
+  nethostHeader:"Netzanteil & Host-Anteil",
+  lbl_totalbits:"Bits gesamt", lbl_netbits:"Bits Netzanteil", lbl_hostbits:"Bits Hostanteil", lbl_totaladdr:"Adressen insgesamt",
+  binaryHeader:"Binärdarstellung",
+  lbl_biprow:"IP-Adresse:", lbl_bmaskrow:"Subnetzmaske:", lbl_bnetrow:"Netzadresse:", lbl_bbroadrow:"Broadcast:",
+  binaryDetailsSummary:"Wie lese ich das?",
+  binaryDetailsText:(c,h)=>`<b>Blau</b> = Netzanteil. <b>Rosa</b> = Host-Anteil. Bei /${c} sind ${c} Bits Netz und ${h} Bits Host.`,
+  learnHeader:"📘 Lernmodus",
+  rangeHeader:"Adressbereich",
+  th_type:"Typ", th_addr:"Adresse", th_meaning:"Bedeutung",
+  row_network_meaning:"Identifiziert das Netzwerk", row_first_meaning:"Erster möglicher Host",
+  row_last_meaning:"Letzter möglicher Host", row_broadcast_meaning:"Alle Hosts im Netzwerk",
+  formulaHeader:"🧮 Rechenweg kompakt",
+  errIp:"Bitte eine gültige IPv4-Adresse eingeben.", errCidr:"CIDR muss zwischen 0 und 32 liegen.",
+  netBarSuffix:"Bit Netz", hostBarSuffix:"Bit Host",
+  locale:"de-DE",
+  help:{
+   network:c=>`<b>Netzadresse:</b> Alle Host-Bits sind 0. Sie bezeichnet das gesamte Netzwerk.`,
+   mask:c=>`<b>Subnetzmaske:</b> Sie zeigt, welche Bits zum Netz gehören. /${c} = ${c} Netzbits.`,
+   broadcast:c=>`<b>Broadcast:</b> Alle Host-Bits sind 1. Damit kann man alle Hosts des Netzwerks ansprechen.`,
+   first:c=>`<b>Erste Adresse:</b> Normalerweise Netzadresse + 1.`,
+   last:c=>`<b>Letzte Adresse:</b> Normalerweise Broadcast − 1.`,
+   hosts:(h,total,hosts,loc)=>`<b>Mögliche Hosts:</b> 2^Hostbits − 2. Bei ${h} Bits: ${total.toLocaleString(loc)} − 2 = ${hosts.toLocaleString(loc)}.`
+  },
+  formula:(ip,c,M,N,total,h,hosts,B)=>`IP-Adresse: ${ip} / ${c}\nSubnetzmaske: ${M}\n\nNetzadresse: IP AND Maske = ${N}\nBroadcast: ${N} + ${total-1} = ${B}\nHost-Bits: 32 − ${c} = ${h}\nAdressen: 2^${h} = ${total}\nMögliche Hosts: ${hosts}`,
+  steps:(c,h,M,N,total,hosts,B,F,L,loc)=>[
+   `<div class="step"><b>1. CIDR bestimmen</b> /${c} bedeutet: <b>${c} Bits</b> sind Netzanteil und <b>${h} Bits</b> Hostanteil.</div>`,
+   `<div class="step"><b>2. Subnetzmaske</b> Die ersten ${c} Bits sind 1, die letzten ${h} Bits 0. Ergebnis: <b>${M}</b>.</div>`,
+   `<div class="step"><b>3. Netzadresse</b> IP und Maske werden bitweise mit <b>AND</b> verknüpft. Alle Host-Bits werden 0. Ergebnis: <b>${N}</b>.</div>`,
+   `<div class="step"><b>4. Anzahl der Adressen</b> ${h} Host-Bits → <b>2^${h} = ${total.toLocaleString(loc)}</b> Adressen.</div>`,
+   `<div class="step"><b>5. Mögliche Hosts</b> Normalerweise werden Netzadresse und Broadcast nicht vergeben: <b>${total.toLocaleString(loc)} − 2 = ${hosts.toLocaleString(loc)}</b>.</div>`,
+   `<div class="step"><b>6. Broadcast</b> Alle Host-Bits werden 1. Ergebnis: <b>${B}</b>.</div>`,
+   `<div class="step"><b>7. Nutzbarer Bereich</b> Von <b>${F}</b> bis <b>${L}</b>.</div>`
+  ].join('')
+ },
+ en:{
+  h1:"Subnetting Learning Calculator",
+  subtitle:"Enter an IPv4 address and CIDR – get the calculation and a step-by-step explanation.",
+  inputHeader:"Input", ipLabel:"IP address", cidrLabel:"CIDR / prefix", calcBtn:"Calculate", example:"Example:",
+  resultHeader:"Result",
+  lbl_network:"Network address", lbl_mask:"Subnet mask", lbl_broadcast:"Broadcast address",
+  lbl_first:"First usable address", lbl_last:"Last usable address", lbl_hosts:"Possible hosts",
+  helpDefault:"<b>Tip:</b> Click a result for a short explanation.",
+  nethostHeader:"Network vs. host portion",
+  lbl_totalbits:"Total bits", lbl_netbits:"Network bits", lbl_hostbits:"Host bits", lbl_totaladdr:"Total addresses",
+  binaryHeader:"Binary representation",
+  lbl_biprow:"IP address:", lbl_bmaskrow:"Subnet mask:", lbl_bnetrow:"Network address:", lbl_bbroadrow:"Broadcast:",
+  binaryDetailsSummary:"How do I read this?",
+  binaryDetailsText:(c,h)=>`<b>Blue</b> = network portion. <b>Pink</b> = host portion. At /${c}, ${c} bits are network and ${h} bits are host.`,
+  learnHeader:"📘 Learning mode",
+  rangeHeader:"Address range",
+  th_type:"Type", th_addr:"Address", th_meaning:"Meaning",
+  row_network_meaning:"Identifies the network", row_first_meaning:"First possible host",
+  row_last_meaning:"Last possible host", row_broadcast_meaning:"All hosts in the network",
+  formulaHeader:"🧮 Calculation summary",
+  errIp:"Please enter a valid IPv4 address.", errCidr:"CIDR must be between 0 and 32.",
+  netBarSuffix:"bits network", hostBarSuffix:"bits host",
+  locale:"en-US",
+  help:{
+   network:c=>`<b>Network address:</b> all host bits are 0. It identifies the network as a whole.`,
+   mask:c=>`<b>Subnet mask:</b> shows which bits belong to the network. /${c} = ${c} network bits.`,
+   broadcast:c=>`<b>Broadcast:</b> all host bits are 1. It's used to address every host on the network.`,
+   first:c=>`<b>First address:</b> usually the network address + 1.`,
+   last:c=>`<b>Last address:</b> usually the broadcast address − 1.`,
+   hosts:(h,total,hosts,loc)=>`<b>Possible hosts:</b> 2^host bits − 2. With ${h} bits: ${total.toLocaleString(loc)} − 2 = ${hosts.toLocaleString(loc)}.`
+  },
+  formula:(ip,c,M,N,total,h,hosts,B)=>`IP address: ${ip} / ${c}\nSubnet mask: ${M}\n\nNetwork address: IP AND mask = ${N}\nBroadcast: ${N} + ${total-1} = ${B}\nHost bits: 32 − ${c} = ${h}\nAddresses: 2^${h} = ${total}\nPossible hosts: ${hosts}`,
+  steps:(c,h,M,N,total,hosts,B,F,L,loc)=>[
+   `<div class="step"><b>1. Determine the CIDR</b> /${c} means: <b>${c} bits</b> are network portion and <b>${h} bits</b> are host portion.</div>`,
+   `<div class="step"><b>2. Subnet mask</b> The first ${c} bits are 1, the remaining ${h} bits are 0. Result: <b>${M}</b>.</div>`,
+   `<div class="step"><b>3. Network address</b> IP and mask are combined bitwise with <b>AND</b>. All host bits become 0. Result: <b>${N}</b>.</div>`,
+   `<div class="step"><b>4. Number of addresses</b> ${h} host bits → <b>2^${h} = ${total.toLocaleString(loc)}</b> addresses.</div>`,
+   `<div class="step"><b>5. Possible hosts</b> The network address and broadcast are usually not assigned: <b>${total.toLocaleString(loc)} − 2 = ${hosts.toLocaleString(loc)}</b>.</div>`,
+   `<div class="step"><b>6. Broadcast</b> All host bits become 1. Result: <b>${B}</b>.</div>`,
+   `<div class="step"><b>7. Usable range</b> From <b>${F}</b> to <b>${L}</b>.</div>`
+  ].join('')
+ }
+};
+
+let lang = localStorage.getItem('subnetLang') || 'de';
+let lastVals = null; // stores values from the last successful calc(), for help()/details re-render
+
+function t(){return I18N[lang]}
+
+function applyStaticText(){
+ document.querySelectorAll('[data-i18n]').forEach(el=>{
+  const key = el.dataset.i18n;
+  if(t()[key]!==undefined) el.innerHTML = t()[key];
+ });
+ $('pageTitle').textContent = t().h1;
+ $('htmlRoot').setAttribute('lang', lang);
+ $('btn-de').classList.toggle('active', lang==='de');
+ $('btn-en').classList.toggle('active', lang==='en');
+ $('binaryDetailsText').innerHTML = lastVals ? t().binaryDetailsText(lastVals.c, lastVals.h) : t().binaryDetailsText(21,11);
+ $('help').innerHTML = t().helpDefault;
+}
+
+function setLang(l){
+ lang = l;
+ localStorage.setItem('subnetLang', l);
+ applyStaticText();
+ if(lastVals) render(lastVals); else applyStaticText();
+}
+
 function ipInt(s){let p=s.split('.').map(Number);return (((p[0]<<24)>>>0)+((p[1]<<16)>>>0)+((p[2]<<8)>>>0)+p[3])>>>0}
 function ipStr(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.')}
 function valid(s){let p=s.split('.');return p.length==4&&p.every(x=>/^\d+$/.test(x)&&+x>=0&&+x<=255)}
 function maskInt(c){return c==0?0:(0xffffffff<<(32-c))>>>0}
 function bin(s,c){let a=s.split('.').map(Number),h='<div class="bits">';a.forEach((o,j)=>{let b=o.toString(2).padStart(8,'0');h+='<div class="oct">';[...b].forEach((x,i)=>h+=`<span class="bit ${j*8+i<c?'nbit':'hbit'}">${x}</span>`);h+='</div>';if(j<3)h+='<span class="dot">.</span>'});return h+'</div>'}
-function help(t){let x={network:'<b>Netzadresse:</b> Alle Host-Bits sind 0. Sie bezeichnet das gesamte Netzwerk.',mask:'<b>Subnetzmaske:</b> Sie zeigt, welche Bits zum Netz gehören. /21 = 21 Netzbits.',broadcast:'<b>Broadcast:</b> Alle Host-Bits sind 1. Damit kann man alle Hosts des Netzwerks ansprechen.',first:'<b>Erste Adresse:</b> Normalerweise Netzadresse + 1.',last:'<b>Letzte Adresse:</b> Normalerweise Broadcast − 1.',hosts:'<b>Mögliche Hosts:</b> 2^Hostbits − 2. Bei 11 Bits: 2048 − 2 = 2046.'};$('help').innerHTML=x[t]}
+
+function help(key){
+ if(!lastVals) return;
+ const v=lastVals, T=t();
+ let txt;
+ if(key==='hosts') txt = T.help.hosts(v.h, v.total, v.hosts, T.locale);
+ else txt = T.help[key](v.c);
+ $('help').innerHTML = txt;
+}
+
 function calc(){
  let ip=$('ip').value.trim(),c=Number($('cidr').value);$('err').style.display='none';
- if(!valid(ip)){return err('Bitte eine gültige IPv4-Adresse eingeben.')} if(!Number.isInteger(c)||c<0||c>32)return err('CIDR muss zwischen 0 und 32 liegen.');
+ if(!valid(ip)){return err(t().errIp)}
+ if(!Number.isInteger(c)||c<0||c>32)return err(t().errCidr);
  let ii=ipInt(ip),m=maskInt(c),n=(ii&m)>>>0,b=(n|(~m>>>0))>>>0,h=32-c,total=2**h,first,last,hosts;
  if(c==32){first=n;last=n;hosts=1}else if(c==31){first=n;last=b;hosts=2}else{first=n+1;last=b-1;hosts=total-2}
- let M=ipStr(m),N=ipStr(n),B=ipStr(b),F=ipStr(first),L=ipStr(last);
- $('network').textContent=N;$('mask').textContent=M;$('broadcast').textContent=B;$('first').textContent=F;$('last').textContent=L;$('hosts').textContent=hosts.toLocaleString('de-DE');
- $('nb').textContent=c;$('hb').textContent=h;$('total').textContent=total.toLocaleString('de-DE');
- $('netbar').style.width=c/32*100+'%';$('hostbar').style.width=h/32*100+'%';$('netbar').textContent=c+' Bit Netz';$('hostbar').textContent=h+' Bit Host';
- $('bip').innerHTML=bin(ip,c);$('bmask').innerHTML=bin(M,c);$('bnet').innerHTML=bin(N,c);$('bbroad').innerHTML=bin(B,c);
- $('tn').textContent=N;$('tf').textContent=F;$('tl').textContent=L;$('tb').textContent=B;
- $('formula').textContent=`IP-Adresse: ${ip} / ${c}\nSubnetzmaske: ${M}\n\nNetzadresse: IP AND Maske = ${N}\nBroadcast: ${N} + ${total-1} = ${B}\nHost-Bits: 32 − ${c} = ${h}\nAdressen: 2^${h} = ${total}\nMögliche Hosts: ${hosts}`;
- $('steps').innerHTML=`
-<div class="step"><b>1. CIDR bestimmen</b> /${c} bedeutet: <b>${c} Bits</b> sind Netzanteil und <b>${h} Bits</b> Hostanteil.</div>
-<div class="step"><b>2. Subnetzmaske</b> Die ersten ${c} Bits sind 1, die letzten ${h} Bits 0. Ergebnis: <b>${M}</b>.</div>
-<div class="step"><b>3. Netzadresse</b> IP und Maske werden bitweise mit <b>AND</b> verknüpft. Alle Host-Bits werden 0. Ergebnis: <b>${N}</b>.</div>
-<div class="step"><b>4. Anzahl der Adressen</b> ${h} Host-Bits → <b>2^${h} = ${total.toLocaleString('de-DE')}</b> Adressen.</div>
-<div class="step"><b>5. Mögliche Hosts</b> Normalerweise werden Netzadresse und Broadcast nicht vergeben: <b>${total.toLocaleString('de-DE')} − 2 = ${hosts.toLocaleString('de-DE')}</b>.</div>
-<div class="step"><b>6. Broadcast</b> Alle Host-Bits werden 1. Ergebnis: <b>${B}</b>.</div>
-<div class="step"><b>7. Nutzbarer Bereich</b> Von <b>${F}</b> bis <b>${L}</b>.</div>`;
+ lastVals = {ip, c, m, n, b, h, total, first, last, hosts,
+  M:ipStr(m), N:ipStr(n), B:ipStr(b), F:ipStr(first), L:ipStr(last)};
+ render(lastVals);
+}
+
+function render(v){
+ const T = t();
+ $('network').textContent=v.N;$('mask').textContent=v.M;$('broadcast').textContent=v.B;$('first').textContent=v.F;$('last').textContent=v.L;$('hosts').textContent=v.hosts.toLocaleString(T.locale);
+ $('nb').textContent=v.c;$('hb').textContent=v.h;$('total').textContent=v.total.toLocaleString(T.locale);
+ $('netbar').style.width=v.c/32*100+'%';$('hostbar').style.width=v.h/32*100+'%';$('netbar').textContent=v.c+' '+T.netBarSuffix;$('hostbar').textContent=v.h+' '+T.hostBarSuffix;
+ $('bip').innerHTML=bin(v.ip,v.c);$('bmask').innerHTML=bin(v.M,v.c);$('bnet').innerHTML=bin(v.N,v.c);$('bbroad').innerHTML=bin(v.B,v.c);
+ $('tn').textContent=v.N;$('tf').textContent=v.F;$('tl').textContent=v.L;$('tb').textContent=v.B;
+ $('formula').textContent=T.formula(v.ip,v.c,v.M,v.N,v.total,v.h,v.hosts,v.B);
+ $('steps').innerHTML=T.steps(v.c,v.h,v.M,v.N,v.total,v.hosts,v.B,v.F,v.L,T.locale);
+ $('binaryDetailsText').innerHTML = T.binaryDetailsText(v.c, v.h);
+ $('help').innerHTML = T.helpDefault;
  $('out').classList.remove('hidden');
 }
+
 function err(m){$('err').textContent=m;$('err').style.display='block'}
+
+// allow pressing Enter in either input field
+['ip','cidr'].forEach(id=>$(id).addEventListener('keydown', e=>{ if(e.key==='Enter') calc(); }));
+
+applyStaticText();
 calc();
 </script>
 </body></html>
