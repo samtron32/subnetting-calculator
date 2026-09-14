@@ -3,7 +3,7 @@ name: Deploy_Subnet_Calculator
 on:
   push:
     branches:
-      - main main
+      - main
 
 jobs:
   deploy:
