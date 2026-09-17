@@ -37,7 +37,26 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 var(--sans);transition:background .2s,color .2s}
 main{max-width:1100px;margin:0 auto;padding:26px 18px 60px}
-.topbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.navtabs{display:flex;gap:6px}
+.navtab{padding:8px 16px;border:1px solid var(--border);background:var(--card);color:var(--text-muted);border-radius:8px;cursor:pointer;font-weight:700;font-size:14px}
+.navtab.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.langgroup{display:flex;gap:8px;align-items:center}
+.learn-section{margin-bottom:14px}
+.learn-section summary{font-size:15px}
+.learn-section p{line-height:1.6;font-size:14.5px}
+.learn-section table{margin:10px 0}
+.convbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.convbox input{width:140px;font-family:var(--mono);text-align:center}
+.footer{text-align:center;margin-top:44px;padding-top:18px;border-top:1px solid var(--border);color:var(--text-muted);font-size:13px}
+.footer a{color:var(--text-muted);text-decoration:underline;cursor:pointer}
+.footer a:hover{color:var(--accent)}
+.modal-overlay{position:fixed;inset:0;background:rgba(5,8,14,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:80}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);max-width:620px;width:100%;max-height:82vh;overflow:auto;padding:26px;position:relative;box-shadow:var(--shadow)}
+.modal-box h2{font-family:var(--mono);text-transform:none;letter-spacing:0;font-size:20px;color:var(--text);margin-top:0}
+.modal-box p{line-height:1.6;font-size:14.5px}
+.modal-close{position:absolute;top:14px;right:14px}
+.placeholder-note{margin-top:16px;padding:10px 12px;background:var(--amber-soft);color:var(--amber);border-radius:8px;font-size:13px}
 .langbtn{padding:7px 14px;border:1px solid var(--border);background:var(--card);color:var(--text-muted);border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;letter-spacing:.03em;font-family:var(--mono)}
 .langbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .iconbtn{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;padding:0}
@@ -98,17 +117,35 @@ details p{font-size:14px;margin:8px 0 2px}
 .qfeedback.ok{background:var(--green-soft);color:var(--green)}
 .qfeedback.bad{background:var(--red-soft);color:var(--red)}
 .qscore{font-size:12.5px;color:var(--text-muted);margin-bottom:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.03em}
-@media(max-width:700px){.grid,.results{grid-template-columns:1fr}.vlsmrow{grid-template-columns:1fr 90px 38px}h1{font-size:25px}}
+.topbar{justify-content:space-between}
+.navgroup,.rightgroup{display:flex;gap:8px;align-items:center}
+.banner{background:var(--amber-soft);border:1px solid var(--amber);color:var(--text);padding:12px 14px;border-radius:8px;font-size:13.5px;line-height:1.5;margin-bottom:16px}
+.legal p{font-size:14px;line-height:1.7;margin:0 0 10px}
+.legal code{background:var(--bg-inset);padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:13px}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);display:flex;gap:18px;color:var(--text-muted);font-size:13px}
+footer a{color:var(--text-muted);text-decoration:none}
+footer a:hover{color:var(--accent);text-decoration:underline}
+html{scroll-behavior:smooth}
+.bitcell{display:flex;flex-direction:column;align-items:center;gap:4px}
+.bitcell .pv{font-size:10.5px;color:var(--text-muted);font-family:var(--mono)}
+@media(max-width:700px){.grid,.results{grid-template-columns:1fr}.vlsmrow{grid-template-columns:1fr 90px 38px}h1{font-size:25px}.topbar{flex-wrap:wrap;gap:10px}}
 </style>
 </head>
 <body><main>
 
 <div class="topbar">
+<div class="navtabs">
+<button class="navtab active" id="tab-calc" onclick="switchView('calc')" data-i18n="navCalc">🖩 Rechner</button>
+<button class="navtab" id="tab-learn" onclick="switchView('learn')" data-i18n="navLearn">📘 Lernen</button>
+</div>
+<div class="langgroup">
 <button class="langbtn active" id="btn-de" onclick="setLang('de')">DE</button>
 <button class="langbtn" id="btn-en" onclick="setLang('en')">EN</button>
 <button class="iconbtn" id="themeBtn" onclick="toggleTheme()" title="Theme">🌙</button>
 </div>
+</div>
 
+<div id="calcView">
 <div class="kicker">// IPv4 · CIDR · VLSM</div>
 <h1 data-i18n="h1">Subnetting-Lernrechner</h1>
 <p class="sub" data-i18n="subtitle">IPv4-Adresse und CIDR eingeben – Berechnung und Lern-Erklärung Schritt für Schritt.</p>
@@ -187,6 +224,55 @@ details p{font-size:14px;margin:8px 0 2px}
 <button id="quizStartBtn" onclick="quizStart()" data-i18n="quizStartBtn">Quiz starten</button>
 <div id="quizBox" class="hidden"></div>
 </section>
+
+</div>
+
+<div id="learnView" class="hidden">
+<div class="kicker">// THEORIE</div>
+<h1 data-i18n="learnTitle">Lernbereich</h1>
+<p class="sub" data-i18n="learnSubtitle">Grundlagen zu Binärzahlen, IP-Adressen und dem IP-Protokoll – zum Nachlesen und Verstehen.</p>
+
+<section class="card">
+<h2 data-i18n="learnConvHeader">🔢 Dezimal ↔ Binär live umrechnen</h2>
+<p class="sub" data-i18n="learnConvDesc" style="margin-bottom:6px">Tippe eine Zahl (0–255) oder ein 8-Bit-Muster ein – die andere Seite rechnet automatisch mit.</p>
+<div class="convbox">
+<div><label data-i18n="learnConvDecLabel">Dezimal (0–255)</label><input id="learnDec" type="number" min="0" max="255" value="172"></div>
+<div style="font-size:22px;color:var(--text-muted);align-self:center;margin-top:18px">⇄</div>
+<div><label data-i18n="learnConvBinLabel">Binär (8 Bit)</label><input id="learnBin" maxlength="8" value="10101100"></div>
+</div>
+</section>
+
+<section class="card accent-net">
+<h2 data-i18n="learnHeader1">📐 Dezimal- und Binärsystem</h2>
+<div id="learnBody1"></div>
+</section>
+
+<section class="card accent-green">
+<h2 data-i18n="learnHeader2">🌐 Aufbau einer IPv4-Adresse</h2>
+<div id="learnBody2"></div>
+</section>
+
+<section class="card accent-amber">
+<h2 data-i18n="learnHeader3">🏷️ Adressklassen & private Bereiche</h2>
+<div id="learnBody3"></div>
+</section>
+
+<section class="card accent-pink">
+<h2 data-i18n="learnHeader4">📦 Das IP-Protokoll kurz erklärt</h2>
+<div id="learnBody4"></div>
+</section>
+</div>
+
+<footer class="footer">
+<a onclick="openModal('impressum')" data-i18n="footerImpressum">Impressum</a> · <a onclick="openModal('datenschutz')" data-i18n="footerDatenschutz">Datenschutz</a>
+</footer>
+
+<div id="modalOverlay" class="modal-overlay hidden" onclick="if(event.target===this) closeModal()">
+<div class="modal-box">
+<button class="iconbtn modal-close" onclick="closeModal()">✕</button>
+<div id="modalContent"></div>
+</div>
+</div>
 
 </main>
 
@@ -267,7 +353,72 @@ const I18N = {
    last:(ip,c)=>`Was ist die <b>letzte verfügbare Adresse</b> in ${ip}/${c}?`,
    hosts:(ip,c)=>`Wie viele <b>Hosts</b> sind in ${ip}/${c} möglich? (Zahl)`
   },
-  quizPlaceholderAddr:"z. B. 192.168.0.1", quizPlaceholderNum:"Zahl eingeben"
+  quizPlaceholderAddr:"z. B. 192.168.0.1", quizPlaceholderNum:"Zahl eingeben",
+  navCalc:"🖩 Rechner", navLearn:"📘 Lernen",
+  learnTitle:"Lernbereich", learnSubtitle:"Grundlagen zu Binärzahlen, IP-Adressen und dem IP-Protokoll – zum Nachlesen und Verstehen.",
+  learnConvHeader:"🔢 Dezimal ↔ Binär live umrechnen",
+  learnConvDesc:"Tippe eine Zahl (0–255) oder ein 8-Bit-Muster ein – die andere Seite rechnet automatisch mit.",
+  learnConvDecLabel:"Dezimal (0–255)", learnConvBinLabel:"Binär (8 Bit)",
+  learnHeader1:"📐 Dezimal- und Binärsystem",
+  learnHeader2:"🌐 Aufbau einer IPv4-Adresse",
+  learnHeader3:"🏷️ Adressklassen & private Bereiche",
+  learnHeader4:"📦 Das IP-Protokoll kurz erklärt",
+  footerImpressum:"Impressum", footerDatenschutz:"Datenschutz",
+  learnBody1:`
+   <details class="learn-section" open><summary>Warum Binärzahlen?</summary>
+   <p>Computer und Netzwerkgeräte arbeiten intern nur mit zwei Zuständen: 0 und 1 (Bit). Eine IPv4-Adresse ist technisch eine 32-Bit-Binärzahl – wir Menschen lesen sie aber lieber als vier durch Punkte getrennte Dezimalzahlen (0–255), sogenannte Oktette, weil das kompakter und verständlicher ist.</p></details>
+   <details class="learn-section"><summary>Das Stellenwertsystem</summary>
+   <p>Jede Bit-Position in einem Oktett hat einen festen Wert – von rechts nach links verdoppelt er sich: <b>1, 2, 4, 8, 16, 32, 64, 128</b>. Eine 1 an einer Position bedeutet "diesen Wert addieren", eine 0 bedeutet "nicht addieren".</p></details>
+   <details class="learn-section"><summary>Dezimal → Binär (Beispiel 200)</summary>
+   <p>Gehe die Stellenwerte von groß nach klein durch: Ist die Zahl ≥ Stellenwert, schreibe 1 und ziehe ihn ab, sonst schreibe 0.</p>
+   <p>200 − 128 = 72 → <b>1</b> &nbsp; 72 ≥ 64 → 72−64=8 → <b>1</b> &nbsp; 8 &lt; 32 → <b>0</b> &nbsp; 8 &lt; 16 → <b>0</b> &nbsp; 8−8=0 → <b>1</b> &nbsp; 0 &lt; 4 → <b>0</b> &nbsp; <b>0</b> &nbsp; <b>0</b><br>Ergebnis: <b>11001000</b></p></details>
+   <details class="learn-section"><summary>Binär → Dezimal (Beispiel 10101100)</summary>
+   <p>Addiere die Stellenwerte, an denen eine 1 steht: 128 + 32 + 8 + 4 = <b>172</b>. Probiere es oben im Live-Rechner selbst aus!</p></details>`,
+  learnBody2:`
+   <details class="learn-section" open><summary>32 Bit, 4 Oktette</summary>
+   <p>Eine IPv4-Adresse besteht aus 32 Bit, aufgeteilt in 4 Oktette zu je 8 Bit. Jedes Oktett kann Werte von 0 bis 255 annehmen (2⁸ = 256 mögliche Werte). Geschrieben wird das als "Dotted Decimal", z. B. <b>192.168.0.10</b>.</p></details>
+   <details class="learn-section"><summary>Netzanteil und Hostanteil</summary>
+   <p>Eine Adresse teilt sich immer in einen Netzanteil (identifiziert das Netzwerk) und einen Hostanteil (identifiziert das einzelne Gerät im Netzwerk). Wo genau die Grenze liegt, bestimmt die Subnetzmaske bzw. das CIDR-Präfix.</p></details>
+   <details class="learn-section"><summary>CIDR-Schreibweise</summary>
+   <p>Die Schreibweise <b>/21</b> hinter einer IP-Adresse (CIDR = Classless Inter-Domain Routing) gibt direkt an, wie viele Bit von links der Netzanteil sind – ohne dass man die Subnetzmaske separat ausschreiben muss. /21 bedeutet: die ersten 21 Bit sind Netz, die restlichen 11 Bit sind Host. Das ist die moderne, flexible Nachfolgerin des alten Klassensystems (siehe unten).</p></details>`,
+  learnBody3:`
+   <details class="learn-section" open><summary>Die klassische Einteilung (historisch)</summary>
+   <p>Früher wurden IP-Adressen in feste Klassen eingeteilt, erkennbar am ersten Oktett:</p>
+   <table><thead><tr><th>Klasse</th><th>Bereich</th><th>Standard-Präfix</th><th>Verwendung</th></tr></thead><tbody>
+   <tr><td>A</td><td>1–126</td><td>/8</td><td>Sehr große Netze</td></tr>
+   <tr><td>B</td><td>128–191</td><td>/16</td><td>Mittelgroße Netze</td></tr>
+   <tr><td>C</td><td>192–223</td><td>/24</td><td>Kleine Netze</td></tr>
+   <tr><td>D</td><td>224–239</td><td>–</td><td>Multicast</td></tr>
+   <tr><td>E</td><td>240–255</td><td>–</td><td>Experimentell/reserviert</td></tr>
+   </tbody></table>
+   <p>Seit den 1990ern wurde dieses starre System durch CIDR ersetzt, weil es Adressraum verschwendete. Die Begriffe "Class A/B/C-Netz" hört man aber im Sprachgebrauch bis heute.</p></details>
+   <details class="learn-section"><summary>Private Adressbereiche (RFC 1918)</summary>
+   <p>Diese Bereiche sind für private Netzwerke reserviert und werden im öffentlichen Internet nicht geroutet – Router übersetzen sie per NAT (Network Address Translation) in eine öffentliche Adresse:</p>
+   <p><b>10.0.0.0/8</b> · <b>172.16.0.0/12</b> · <b>192.168.0.0/16</b></p></details>
+   <details class="learn-section"><summary>Sonderadressen</summary>
+   <p><b>127.0.0.0/8</b> – Loopback, zeigt immer auf das eigene Gerät (localhost). <b>169.254.0.0/16</b> – Link-Local/APIPA, wird automatisch vergeben, wenn kein DHCP-Server erreichbar ist.</p></details>`,
+  learnBody4:`
+   <details class="learn-section" open><summary>Was macht IP eigentlich?</summary>
+   <p>IP (Internet Protocol) ist für die Vermittlung von Datenpaketen zwischen Netzwerken zuständig – die "Vermittlungsschicht" (Schicht 3) im OSI-Modell. IP sorgt dafür, dass ein Paket anhand der Zieladresse über Router den richtigen Weg durchs Netz findet.</p></details>
+   <details class="learn-section"><summary>Keine Garantie für Zustellung</summary>
+   <p>IP selbst garantiert weder, dass ein Paket ankommt, noch die richtige Reihenfolge. Dafür ist auf der nächsten Schicht meist TCP zuständig (zuverlässige Übertragung mit Bestätigungen), während UDP auf schnelle, aber ungesicherte Übertragung setzt (z. B. Streaming).</p></details>
+   <details class="learn-section"><summary>Wichtige Felder im IP-Header (vereinfacht)</summary>
+   <p><b>Quell- und Zieladresse</b> – wer sendet, wer soll empfangen. <b>TTL (Time to Live)</b> – begrenzt die Anzahl der Hops, damit Pakete nicht endlos im Kreis laufen. <b>Protokollnummer</b> – sagt, welches Protokoll im Paket steckt (z. B. TCP = 6, UDP = 17).</p></details>
+   <details class="learn-section"><summary>IPv4 vs. IPv6</summary>
+   <p>IPv4 nutzt 32 Bit (~4,3 Milliarden Adressen) – diese sind inzwischen praktisch aufgebraucht. IPv6 nutzt 128 Bit und bietet damit einen praktisch unerschöpflichen Adressraum. IPv4 bleibt aber wegen seiner Verbreitung und dank NAT noch lange relevant.</p></details>`,
+  impressumHtml:`<h2>Impressum</h2>
+   <p>Angaben gemäß § 5 TMG / § 18 Abs. 2 MStV:</p>
+   <p><b>[Vor- und Nachname bzw. Firmenname]</b><br>[Straße und Hausnummer]<br>[PLZ und Ort]<br>[Land]</p>
+   <p><b>Kontakt</b><br>Telefon: [Telefonnummer]<br>E-Mail: [E-Mail-Adresse]</p>
+   <p><b>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</b><br>[Name und Anschrift wie oben]</p>
+   <div class="placeholder-note">⚠️ Dies ist eine Vorlage mit Platzhaltern in eckigen Klammern – bitte durch deine echten Angaben ersetzen, bevor du die Seite veröffentlichst. Das ist keine Rechtsberatung; bei Unsicherheit hilft ein kostenloser Impressum-Generator (z. B. von e-recht24.de) oder ein Anwalt.</div>`,
+  datenschutzHtml:`<h2>Datenschutzerklärung</h2>
+   <p><b>Verantwortlicher</b><br>[Name, Anschrift, E-Mail – wie im Impressum]</p>
+   <p><b>Welche Daten werden verarbeitet?</b><br>Dieses Tool speichert deine zuletzt eingegebene IP-Adresse, das CIDR-Präfix, deine Sprachauswahl und dein Theme (hell/dunkel) im <b>localStorage deines Browsers</b>. Diese Daten verlassen deinen Browser nicht und werden an keinen Server übertragen.</p>
+   <p><b>Server-Logs</b><br>Je nach Hosting-Anbieter werden beim Seitenaufruf automatisch technische Daten (z. B. IP-Adresse, Zeitpunkt, aufgerufene Datei) in Server-Logs gespeichert. Ergänze hier die Angaben deines konkreten Hosters.</p>
+   <p><b>Cookies & Analyse-Tools</b><br>Aktuell werden keine Cookies gesetzt und keine Analyse-/Tracking-Tools eingebunden. Falls du später z. B. Google Analytics hinzufügst, muss dieser Abschnitt entsprechend ergänzt werden.</p>
+   <p><b>Deine Rechte</b><br>Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner Daten sowie ein Beschwerderecht bei einer Aufsichtsbehörde.</p>
+   <div class="placeholder-note">⚠️ Vorlage mit Platzhaltern – bitte an deine tatsächliche Situation (Hoster, ggf. Analyse-Tools) anpassen. Keine Rechtsberatung.</div>`
  },
  en:{
   h1:"Subnetting Learning Calculator",
@@ -341,7 +492,72 @@ const I18N = {
    last:(ip,c)=>`What is the <b>last usable address</b> in ${ip}/${c}?`,
    hosts:(ip,c)=>`How many <b>hosts</b> are possible in ${ip}/${c}? (number)`
   },
-  quizPlaceholderAddr:"e.g. 192.168.0.1", quizPlaceholderNum:"Enter a number"
+  quizPlaceholderAddr:"e.g. 192.168.0.1", quizPlaceholderNum:"Enter a number",
+  navCalc:"🖩 Calculator", navLearn:"📘 Learn",
+  learnTitle:"Learning area", learnSubtitle:"Basics on binary numbers, IP addresses and the IP protocol — for reading up and understanding.",
+  learnConvHeader:"🔢 Live decimal ↔ binary converter",
+  learnConvDesc:"Type a number (0–255) or an 8-bit pattern — the other side updates automatically.",
+  learnConvDecLabel:"Decimal (0–255)", learnConvBinLabel:"Binary (8 bit)",
+  learnHeader1:"📐 The decimal and binary system",
+  learnHeader2:"🌐 Structure of an IPv4 address",
+  learnHeader3:"🏷️ Address classes & private ranges",
+  learnHeader4:"📦 The IP protocol, briefly",
+  footerImpressum:"Legal notice", footerDatenschutz:"Privacy",
+  learnBody1:`
+   <details class="learn-section" open><summary>Why binary numbers?</summary>
+   <p>Computers and network devices internally work with just two states: 0 and 1 (a bit). An IPv4 address is technically a 32-bit binary number — but humans read it as four decimal numbers (0–255) separated by dots, called octets, because that's far more compact and readable.</p></details>
+   <details class="learn-section"><summary>The positional system</summary>
+   <p>Each bit position within an octet has a fixed value that doubles from right to left: <b>1, 2, 4, 8, 16, 32, 64, 128</b>. A 1 at a position means "add this value", a 0 means "skip it".</p></details>
+   <details class="learn-section"><summary>Decimal → binary (example: 200)</summary>
+   <p>Go through the place values from largest to smallest: if the number is ≥ the place value, write 1 and subtract it, otherwise write 0.</p>
+   <p>200 − 128 = 72 → <b>1</b> &nbsp; 72 ≥ 64 → 72−64=8 → <b>1</b> &nbsp; 8 &lt; 32 → <b>0</b> &nbsp; 8 &lt; 16 → <b>0</b> &nbsp; 8−8=0 → <b>1</b> &nbsp; 0 &lt; 4 → <b>0</b> &nbsp; <b>0</b> &nbsp; <b>0</b><br>Result: <b>11001000</b></p></details>
+   <details class="learn-section"><summary>Binary → decimal (example: 10101100)</summary>
+   <p>Add up the place values where there's a 1: 128 + 32 + 8 + 4 = <b>172</b>. Try it yourself in the live converter above!</p></details>`,
+  learnBody2:`
+   <details class="learn-section" open><summary>32 bits, 4 octets</summary>
+   <p>An IPv4 address consists of 32 bits, split into 4 octets of 8 bits each. Each octet can hold values from 0 to 255 (2⁸ = 256 possible values). It's written as "dotted decimal", e.g. <b>192.168.0.10</b>.</p></details>
+   <details class="learn-section"><summary>Network portion and host portion</summary>
+   <p>An address always splits into a network portion (identifies the network) and a host portion (identifies the individual device on that network). Exactly where the boundary sits is defined by the subnet mask, or equivalently the CIDR prefix.</p></details>
+   <details class="learn-section"><summary>CIDR notation</summary>
+   <p>The notation <b>/21</b> after an IP address (CIDR = Classless Inter-Domain Routing) directly states how many bits, from the left, form the network portion — no need to spell out the subnet mask separately. /21 means: the first 21 bits are network, the remaining 11 bits are host. This is the modern, flexible successor to the old class system (see below).</p></details>`,
+  learnBody3:`
+   <details class="learn-section" open><summary>The classic system (historical)</summary>
+   <p>IP addresses used to be split into fixed classes, identifiable by the first octet:</p>
+   <table><thead><tr><th>Class</th><th>Range</th><th>Default prefix</th><th>Use</th></tr></thead><tbody>
+   <tr><td>A</td><td>1–126</td><td>/8</td><td>Very large networks</td></tr>
+   <tr><td>B</td><td>128–191</td><td>/16</td><td>Medium-sized networks</td></tr>
+   <tr><td>C</td><td>192–223</td><td>/24</td><td>Small networks</td></tr>
+   <tr><td>D</td><td>224–239</td><td>–</td><td>Multicast</td></tr>
+   <tr><td>E</td><td>240–255</td><td>–</td><td>Experimental/reserved</td></tr>
+   </tbody></table>
+   <p>Since the 1990s this rigid system has been replaced by CIDR, since it wasted address space. The terms "class A/B/C network" are still used colloquially, though.</p></details>
+   <details class="learn-section"><summary>Private address ranges (RFC 1918)</summary>
+   <p>These ranges are reserved for private networks and are not routed on the public internet — routers translate them to a public address via NAT (Network Address Translation):</p>
+   <p><b>10.0.0.0/8</b> · <b>172.16.0.0/12</b> · <b>192.168.0.0/16</b></p></details>
+   <details class="learn-section"><summary>Special addresses</summary>
+   <p><b>127.0.0.0/8</b> — loopback, always points to the device itself (localhost). <b>169.254.0.0/16</b> — link-local/APIPA, assigned automatically when no DHCP server is reachable.</p></details>`,
+  learnBody4:`
+   <details class="learn-section" open><summary>What does IP actually do?</summary>
+   <p>IP (Internet Protocol) is responsible for routing data packets between networks — the "network layer" (layer 3) of the OSI model. IP gets a packet to the right destination across routers, based on the destination address.</p></details>
+   <details class="learn-section"><summary>No delivery guarantee</summary>
+   <p>IP itself guarantees neither delivery nor correct ordering of packets. That's usually handled by TCP on the layer above (reliable transmission with acknowledgements), while UDP favors speed over guaranteed delivery (e.g. streaming).</p></details>
+   <details class="learn-section"><summary>Key fields in the IP header (simplified)</summary>
+   <p><b>Source and destination address</b> — who's sending, who should receive. <b>TTL (Time to Live)</b> — limits the number of hops so packets don't loop forever. <b>Protocol number</b> — states which protocol is carried in the packet (e.g. TCP = 6, UDP = 17).</p></details>
+   <details class="learn-section"><summary>IPv4 vs. IPv6</summary>
+   <p>IPv4 uses 32 bits (~4.3 billion addresses) — these are essentially exhausted by now. IPv6 uses 128 bits, offering a practically inexhaustible address space. IPv4 remains relevant for a long time yet, thanks to its ubiquity and NAT.</p></details>`,
+  impressumHtml:`<h2>Legal notice (Impressum)</h2>
+   <p>Information according to § 5 TMG / § 18(2) MStV (German law):</p>
+   <p><b>[Full name or company name]</b><br>[Street and number]<br>[Postal code and city]<br>[Country]</p>
+   <p><b>Contact</b><br>Phone: [phone number]<br>Email: [email address]</p>
+   <p><b>Responsible for content under § 18(2) MStV</b><br>[Name and address as above]</p>
+   <div class="placeholder-note">⚠️ This is a template with placeholders in brackets — replace them with your real details before publishing. This is not legal advice; if unsure, use a free legal-notice generator (e.g. e-recht24.de) or consult a lawyer. Note: a German legal notice is only mandatory if the site is operated from / targeted at Germany.</div>`,
+  datenschutzHtml:`<h2>Privacy policy</h2>
+   <p><b>Data controller</b><br>[Name, address, email — same as legal notice]</p>
+   <p><b>What data is processed?</b><br>This tool stores your last-entered IP address, CIDR prefix, language choice and theme (light/dark) in your browser's <b>localStorage</b>. This data never leaves your browser and is not sent to any server.</p>
+   <p><b>Server logs</b><br>Depending on your hosting provider, technical data (e.g. IP address, timestamp, requested file) may automatically be logged when the page is accessed. Add the specifics of your actual host here.</p>
+   <p><b>Cookies & analytics</b><br>No cookies are currently set and no analytics/tracking tools are embedded. If you add something like Google Analytics later, this section needs to be updated accordingly.</p>
+   <p><b>Your rights</b><br>You have the right to access, correct, delete and restrict processing of your data, and the right to lodge a complaint with a supervisory authority.</p>
+   <div class="placeholder-note">⚠️ Template with placeholders — adapt to your actual situation (host, any analytics tools). Not legal advice.</div>`
  }
 };
 
@@ -368,6 +584,8 @@ function applyStaticText(){
  $('btn-en').classList.toggle('active', lang==='en');
  $('binaryDetailsText').innerHTML = lastVals ? t().binaryDetailsText(lastVals.c, lastVals.h) : t().binaryDetailsText(21,11);
  $('help').innerHTML = t().helpDefault;
+ renderLearnBodies();
+ if(currentModal) openModal(currentModal);
 }
 
 function setLang(l){
@@ -376,6 +594,46 @@ function setLang(l){
  applyStaticText();
  if(lastVals) render(lastVals);
 }
+
+// ---------- view switching (Rechner / Lernen) ----------
+function switchView(view){
+ const isCalc = view==='calc';
+ $('calcView').classList.toggle('hidden', !isCalc);
+ $('learnView').classList.toggle('hidden', isCalc);
+ $('tab-calc').classList.toggle('active', isCalc);
+ $('tab-learn').classList.toggle('active', !isCalc);
+}
+
+function renderLearnBodies(){
+ const T=t();
+ for(let i=1;i<=4;i++){ const el=$('learnBody'+i); if(el) el.innerHTML = T['learnBody'+i]; }
+}
+
+// ---------- live decimal <-> binary converter (Lernen tab) ----------
+function lrnFromDec(){
+ const n = Number($('learnDec').value);
+ if(!Number.isInteger(n) || n<0 || n>255) return;
+ $('learnBin').value = n.toString(2).padStart(8,'0');
+}
+function lrnFromBin(){
+ let s = $('learnBin').value.replace(/[^01]/g,'').slice(0,8);
+ if(s !== $('learnBin').value) $('learnBin').value = s;
+ if(s.length===0) return;
+ $('learnDec').value = parseInt(s.padStart(8,'0'),2);
+}
+
+// ---------- Impressum / Datenschutz modal ----------
+let currentModal = null;
+function openModal(which){
+ currentModal = which;
+ $('modalContent').innerHTML = which==='impressum' ? t().impressumHtml : t().datenschutzHtml;
+ $('modalOverlay').classList.remove('hidden');
+}
+function closeModal(){
+ $('modalOverlay').classList.add('hidden');
+ currentModal = null;
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
 // ---------- theme ----------
 function applyTheme(theme){
@@ -628,6 +886,8 @@ function initInputs(){
 
 ['ip','cidr'].forEach(id=>$(id).addEventListener('keydown', e=>{ if(e.key==='Enter') calc(); }));
 $('revHosts').addEventListener('keydown', e=>{ if(e.key==='Enter') calcReverse(); });
+$('learnDec').addEventListener('input', lrnFromDec);
+$('learnBin').addEventListener('input', lrnFromBin);
 
 initTheme();
 applyStaticText();
