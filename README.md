@@ -126,3 +126,16 @@ The application is functional and has been tested manually.
 
 Public web hosting is currently disabled.
 
+## Screenshots
+
+### Subnet Calculator
+![Subnet Calculator](screenshots/calculator.png)
+
+### Binary Visualization
+![Binary Visualization](screenshots/binary.png)
+
+### VLSM Calculator
+![VLSM Calculator](screenshots/vlsm.png)
+
+### Learning Area
+![Learning Area](screenshots/learning.png)
