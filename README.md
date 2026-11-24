@@ -139,3 +139,5 @@ Public web hosting is currently disabled.
 
 ### Learning Area
 ![Learning Area](screenshots/learning.png)
+
+For more details, see the [Deployment Documentation](docs/deployment.md).
